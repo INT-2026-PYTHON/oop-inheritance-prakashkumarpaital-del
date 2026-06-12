@@ -155,3 +155,117 @@ Team total salary -> 173250.0 + 105000.0 + 84000.0
 =================================================
 
 """
+class Person:
+    species = "Homo sapiens"
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age  = int(age)
+
+    def greet(self):
+        return f"Hi, I'm {self.name}, age {self.age}"
+
+    @staticmethod
+    def is_adult(age):
+        return int(age) >= 18
+
+class Employee(Person):
+    company   = "Acme Corp"
+    bonus_pct = 5
+
+    def __init__(self, name, age, emp_id, salary):
+        super().__init__(name, age)
+        self.emp_id = emp_id
+        self.salary = float(salary)
+
+    def work_intro(self):
+        return (f"I work at {Employee.company} "
+                f"as id {self.emp_id}")
+
+    def apply_bonus(self):
+        self.salary += self.salary * Employee.bonus_pct / 100
+
+    @classmethod
+    def set_bonus(cls, new_pct):
+        cls.bonus_pct = new_pct
+
+class Manager(Employee):
+    def __init__(self, name, age, emp_id, salary, team=None):
+        super().__init__(name, age, emp_id, salary)
+        self.team = team if team is not None else []
+
+    def add_member(self, employee):
+        self.team.append(employee)
+
+    def team_intro(self):
+        return f"I lead a team of {len(self.team)} people."
+
+    def team_total_salary(self):
+        total_salary = self.salary
+        for member in self.team:
+            total_salary += member.salary
+        return total_salary
+
+person_name = input("Enter Person's name: ")
+person_age = input("Enter Person's age: ")
+p = Person(person_name, person_age)
+print(p.greet())
+
+emp1_name = input("Enter first Employee's name: ")
+emp1_age = input("Enter first Employee's age: ")
+emp1_id = input("Enter first Employee's ID: ")
+emp1_salary = input("Enter first Employee's salary: ")
+e1 = Employee(emp1_name, emp1_age, emp1_id, emp1_salary)
+
+emp2_name = input("Enter second Employee's name: ")
+emp2_age = input("Enter second Employee's age: ")
+emp2_id = input("Enter second Employee's ID: ")
+emp2_salary = input("Enter second Employee's salary: ")
+e2 = Employee(emp2_name, emp2_age, emp2_id, emp2_salary)
+
+print(e1.greet())
+print(e1.work_intro())
+print(e2.greet())
+print(e2.work_intro())
+
+manager_name = input("Enter Manager's name: ")
+manager_age = input("Enter Manager's age: ")
+manager_id = input("Enter Manager's ID: ")
+manager_salary = input("Enter Manager's salary: ")
+m = Manager(manager_name, manager_age, manager_id, manager_salary)
+m.add_member(e1)
+m.add_member(e2)
+
+print(m.greet())
+print(m.work_intro())
+print(m.team_intro())
+
+print(f"{e1.name} salary before bonus: {e1.salary}")
+print(f"{e2.name} salary before bonus: {e2.salary}")
+print(f"{m.name} salary before bonus: {m.salary}")
+
+e1.apply_bonus()
+e2.apply_bonus()
+m.apply_bonus()
+
+print(f"{e1.name} salary after first bonus (5%): {e1.salary}")
+print(f"{e2.name} salary after first bonus (5%): {e2.salary}")
+print(f"{m.name} salary after first bonus (5%): {m.salary}")
+
+new_bonus_pct = input("Enter new bonus percentage: ")
+Employee.set_bonus(int(new_bonus_pct))
+
+e1.apply_bonus()
+e2.apply_bonus()
+m.apply_bonus()
+
+print(f"{e1.name} salary after second bonus ({new_bonus_pct}%): {e1.salary}")
+print(f"{e2.name} salary after second bonus ({new_bonus_pct}%): {e2.salary}")
+print(f"{m.name} salary after second bonus ({new_bonus_pct}%): {m.salary}")
+
+age_test1 = input("Enter an age to test for adulthood: ")
+print(f"is_adult({age_test1}) -> {Person.is_adult(age_test1)}")
+age_test2 = input("Enter another age to test for adulthood: ")
+print(f"is_adult({age_test2}) -> {Person.is_adult(age_test2)}")
+
+print(f"Team total salary -> {m.team_total_salary()}")
