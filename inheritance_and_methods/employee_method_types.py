@@ -96,3 +96,61 @@ is_valid_salary("abc")  -> False
 =================================================
 
 """
+class Employee:
+    company    = "Acme Corp"
+    raise_pct  = 5
+
+    def __init__(self, name, salary):
+        self.name   = name
+        self.salary = float(salary)
+
+    def apply_raise(self):
+        self.salary *= (1 + self.raise_pct / 100)
+
+    @classmethod
+    def set_raise_percentage(cls, new_pct):
+        cls.raise_pct = new_pct
+
+    @classmethod
+    def from_string(cls, csv_line):
+        name, salary = csv_line.split(',')
+        return cls(name.strip(), float(salary.strip()))
+
+    @staticmethod
+    def is_valid_salary(amount):
+        return (isinstance(amount, (int, float)) and amount > 0)
+
+emp1_name = input("Enter first employee's name: ")
+emp1_salary = input("Enter first employee's salary: ")
+e1 = Employee(emp1_name, emp1_salary)
+
+emp2_name = input("Enter second employee's name: ")
+emp2_salary = input("Enter second employee's salary: ")
+e2 = Employee(emp2_name, emp2_salary)
+
+emp3_str = input("Enter third employee data: ")
+e3 = Employee.from_string(emp3_str)
+
+e1.apply_raise()
+e2.apply_raise()
+e3.apply_raise()
+
+new_raise_percentage = int(input("Enter new global raise percentage: "))
+Employee.set_raise_percentage(new_raise_percentage)
+
+e1.apply_raise()
+e2.apply_raise()
+e3.apply_raise()
+
+print(f"{e1.name} -> {e1.salary}")
+print(f"{e2.name} -> {e2.salary}")
+print(f"{e3.name} -> {e3.salary}")
+
+salary_test1 = float(input("Enter a salary to test: "))
+print(f"is_valid_salary({salary_test1})  -> {Employee.is_valid_salary(salary_test1)}")
+
+salary_test2 = float(input("Enter another salary to test: "))
+print(f"is_valid_salary({salary_test2})   -> {Employee.is_valid_salary(salary_test2)}")
+
+salary_test3 = input("Enter a non-numeric value to test: ")
+print(f"is_valid_salary('{salary_test3}')  -> {Employee.is_valid_salary(salary_test3)}")
