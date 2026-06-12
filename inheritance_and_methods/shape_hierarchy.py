@@ -112,3 +112,85 @@ Explanation:
 =================================================
 
 """
+class Shape:
+    def __init__(self, name):
+        self.name = name
+
+    def area(self):
+        raise NotImplementedError(
+            "Child classes must override area()"
+        )
+
+    def perimeter(self):
+        raise NotImplementedError(
+            "Child classes must override perimeter()"
+        )
+
+    def describe(self):
+        print(f"{self.name}: "
+              f"area={self.area()}, "
+              f"perimeter={self.perimeter()}")
+
+class Circle(Shape):
+    def __init__(self, radius):
+        super().__init__("Circle")
+        self.radius = float(radius)
+
+    def area(self):
+        return 3.14159 * self.radius * self.radius
+
+    def perimeter(self):
+        return 2 * 3.14159 * self.radius
+
+class Rectangle(Shape):
+    def __init__(self, length, width):
+        super().__init__("Rectangle")
+        self.length = float(length)
+        self.width = float(width)
+
+    def area(self):
+        return self.length * self.width
+
+    def perimeter(self):
+        return 2 * (self.length + self.width)
+
+class Triangle(Shape):
+    def __init__(self, a, b, c):
+        super().__init__("Triangle")
+        self.a = float(a)
+        self.b = float(b)
+        self.c = float(c)
+
+    def perimeter(self):
+        return self.a + self.b + self.c
+
+    def area(self):
+        s = self.perimeter() / 2
+        return (s * (s - self.a) * (s - self.b) * (s - self.c)) ** 0.5
+
+print("Demonstrating NotImplementedError for base Shape class:")
+try:
+    s = Shape("Generic Shape")
+    s.describe()
+except NotImplementedError as e:
+    print(f"Shape itself raises NotImplementedError: {e}")
+
+print("\nCreating concrete shapes:")
+
+circle_radius = input("Enter circle radius: ")
+circle = Circle(circle_radius)
+
+rectangle_length = input("Enter rectangle length: ")
+rectangle_width = input("Enter rectangle width: ")
+rectangle = Rectangle(rectangle_length, rectangle_width)
+
+triangle_side_a = input("Enter triangle side a: ")
+triangle_side_b = input("Enter triangle side b: ")
+triangle_side_c = input("Enter triangle side c: ")
+triangle = Triangle(triangle_side_a, triangle_side_b, triangle_side_c)
+
+shapes = [circle, rectangle, triangle]
+
+print("\nDescribing all shapes:")
+for shape in shapes:
+    shape.describe()
